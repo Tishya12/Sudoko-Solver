@@ -1,0 +1,60 @@
+Simple java based code.
+package SudokoSolver;
+
+import java.util.Scanner;
+
+public class Main {
+    static boolean ispossible(int s[][],int i,int j,int n,int k){
+        for(int x=0;x<9;x++){
+            if(s[i][x]==k || s[x][j]==k)
+                return false;
+        }
+
+        n=(int)Math.sqrt(n);
+        int si=(i/n)*n;
+        int sj=(j/n)*n;
+        for(int x=si;x<si+3;x++)
+            for(int y=sj;y<sj+3;y++)
+                if(s[x][y]==k)
+                    return false;
+        return true;
+    }
+
+    static boolean sudoku(int s[][],int i,int j,int n) {
+        if (i == n) {
+            for (int a = 0; a < n; a++) {
+                for (int b = 0; b < n; b++)
+                    System.out.println(s[a][b] + " ");
+                System.out.println();
+            }
+            return true;
+        }
+        if (j == n)
+            return sudoku(s, i + 1, 0, n);
+        if (s[i][j] != 0)
+            return sudoku(s, i, j + 1, n);
+        for (int k = 1; k <= 9; k++) {
+            if (ispossible(s, i, j, n, k)) {
+                s[i][j] = k;
+                boolean check = sudoku(s, i, j + 1, n);
+                if (check)
+                    return true;
+            }
+        }
+        s[i][j] = 0;    //backtracking
+        return false;
+    }
+        public static void main(String args[]) {
+        int n;
+        System.out.println("Enter size of sudoko board");
+        Scanner sc=new Scanner(System.in);
+       n= sc.nextInt();
+        int s[][]=new int[n][n];
+        System.out.println("Enter the grid");
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+                s[i][j]=sc.nextInt();
+        if(!sudoku(s,0,0,n))
+            System.out.println("-1");
+    }
+}
